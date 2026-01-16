@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Will You Be My Valentine?</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+
+    <style>
+        /* General Page Styling */
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #ffe6e6;
+            font-family: 'Pacifico', cursive;
+            overflow: hidden; 
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .container {
+            position: relative;
+            z-index: 10;
+            /* Animation: Fade in and slide up when page loads */
+            animation: fadeIn 1.5s ease-out;
+        }
+
+        /* GIF Styling with Floating Animation */
+        .gif-container img {
+            max-width: 100%;
+            height: 200px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            /* Animation: Float up and down */
+            animation: float 3s ease-in-out infinite;
+        }
+
+        h1 {
+            color: #d32f2f;
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        button {
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Pacifico', cursive;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .yes-btn {
+            background-color: #4CAF50;
+            color: white;
+            z-index: 100; /* Ensure it sits on top when it grows */
+        }
+        
+        .yes-btn:hover {
+            background-color: #45a049;
+            transform: scale(1.05); /* Slight pulse on hover */
+        }
+
+        .no-btn {
+            background-color: #f44336;
+            color: white;
+        }
+
+        .no-btn:hover {
+            background-color: #d32f2f;
+        }
+
+        /* --- ANIMATIONS --- */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- CLASS FOR FULL SCREEN YES BUTTON --- */
+        .full-screen-btn {
+            position: fixed !important;
+            top: 0;
+            left: 0;
+            width: 100vw !important;
+            height: 100vh !important;
+            border-radius: 0 !important;
+            font-size: 5rem !important; /* Huge Text */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transform: none !important; /* Reset any previous scaling */
+            z-index: 9999 !important;
+        }
+
+        @media (max-width: 600px) {
+            h1 { font-size: 1.8rem; }
+            .gif-container img { height: 150px; }
+            .full-screen-btn { font-size: 3rem !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="gif-container" id="gifContainer">
+            <img src="https://media.tenor.com/K1Vfb3408j0AAAAi/cute-bears-love.gif" alt="Cute Bear">
+        </div>
+
+        <h1 id="question">Will you be my Valentine?</h1>
+
+        <div class="buttons">
+            <button class="yes-btn" id="yesBtn" onclick="handleYes()">Yes</button>
+            <button class="no-btn" id="noBtn" onclick="handleNo()">No</button>
+        </div>
+    </div>
+
+    <script>
+        const noPhrases = [
+            "No",
+            "Are you sure?",
+            "Really sure??",
+            "Think again!",
+            "Last chance!" 
+            // We stop here because the 5th click triggers the full screen
+        ];
+
+        let noCount = 0;
+        let yesScale = 1;
+
+        function handleNo() {
+            noCount++;
+            const yesBtn = document.getElementById('yesBtn');
+            const noBtn = document.getElementById('noBtn');
+
+            // Logic: On the 5th click, go full screen
+            if (noCount === 5) {
+                noBtn.style.display = 'none'; // Hide the No button
+                yesBtn.classList.add('full-screen-btn');
+                yesBtn.innerText = "OKAY YES!! ❤️"; // Change text to match enthusiasm
+            } else {
+                // 1. Change text on No button
+                noBtn.innerText = noPhrases[Math.min(noCount, noPhrases.length - 1)];
+
+                // 2. Increase size of Yes button moderately
+                yesScale *= 1.4; // Scaled up faster than before
+                yesBtn.style.transform = `scale(${yesScale})`;
+            }
+        }
+
+        function handleYes() {
+            const container = document.querySelector('.container');
+            
+            // Fix: If button was full screen, reset styles for the success page so it looks nice
+            const yesBtn = document.getElementById('yesBtn');
+            yesBtn.classList.remove('full-screen-btn');
+
+            container.innerHTML = `
+                <div class="gif-container">
+                    <img src="https://media.tenor.com/gUiu1zyxfzYAAAAi/bear-kiss-bear-kisses.gif" alt="Happy Bear">
+                </div>
+                <h1 style="font-size: 3rem; animation: fadeIn 1s;">Hehe, I knew you would say yes!</h1>
+            `;
+            document.body.style.backgroundColor = "#ffc1e3";
+        }
+    </script>
+</body>
+</html>
